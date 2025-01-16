@@ -1,5 +1,7 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import Home from './pages/Home.vue'
+</script>
 
 <template>
-	<div class="text-4xl">Hello</div>
+	<Home />
 </template>
