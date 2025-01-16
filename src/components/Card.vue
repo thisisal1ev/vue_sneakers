@@ -5,6 +5,7 @@ interface Props {
 	title: string
 	img: string
 	price: number
+	isAdded: boolean
 }
 
 defineProps<Props>()
@@ -22,12 +23,12 @@ const onClick = (): void => {
 	>
 		<div @click="onClick" class="absolute top-8 left-8">
 			<img
-				:src="isLiked ? '/icons/like-1.svg' : '/icons/like-2.svg'"
+				:src="isLiked ? '/icons/like-2.svg' : '/icons/like-1.svg'"
 				alt="Favorite"
 			/>
 		</div>
 
-		<img :src="img" class="w-full" alt="Sneaker" />
+		<img width="200" height="200" :src="img" class="w-full" alt="Sneaker" />
 
 		<p>{{ title }}</p>
 
@@ -37,7 +38,14 @@ const onClick = (): void => {
 				<span class="font-bold">{{ price }} руб.</span>
 			</div>
 
-			<img src="/icons/plus.svg" alt="Plus" />
+			<button>
+				<img
+					:src="isAdded ? '/icons/checked.svg' : '/icons/plus.svg'"
+					width="32"
+					height="32"
+					alt="Plus"
+				/>
+			</button>
 		</div>
 	</div>
 </template>

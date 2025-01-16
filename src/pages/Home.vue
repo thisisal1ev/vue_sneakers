@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Header from '../components/Header.vue'
-import Card from '../components/Card.vue'
+import CardList from '../components/CardList.vue'
 </script>
 
 <template>
@@ -36,13 +36,7 @@ import Card from '../components/Card.vue'
 				</div>
 			</div>
 
-			<div class="grid grid-cols-4 gap-10">
-				<Card
-					title="Мужские Кроссовки Nike Blazer Mid Suede"
-					:price="1000"
-					img="/sneakers/sneakers-1.jpg"
-				/>
-			</div>
+			<CardList />
 		</div>
 	</div>
 </template>
