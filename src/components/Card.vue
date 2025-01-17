@@ -5,10 +5,11 @@ interface Props {
 	title: string
 	img: string
 	price: number
-	isAdded: boolean
+	isAdded?: boolean
 }
 
 defineProps<Props>()
+defineEmits(['onClickAdd'])
 
 const isLiked = ref<boolean>(false)
 

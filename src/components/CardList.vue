@@ -1,35 +1,22 @@
 <script lang="ts" setup>
+import type { TItems } from '../items.data'
 import Card from './Card.vue'
+
+interface Props {
+	items: TItems[]
+}
+
+defineProps<Props>()
 </script>
 
 <template>
 	<div class="grid grid-cols-4 gap-5">
 		<Card
-			title="Мужские Кроссовки Nike Blazer Mid Suede"
-			img="/sneakers/sneakers-1.jpg"
-			:price="1000"
-			:isAdded="true"
-		/>
-
-		<Card
-			title="Мужские Кроссовки Nike Blazer Mid Suede"
-			img="/sneakers/sneakers-3.jpg"
-			:price="1150"
-			:isAdded="false"
-		/>
-
-		<Card
-			title="Мужские Кроссовки Nike Blazer Mid Suede"
-			img="/sneakers/sneakers-6.jpg"
-			:price="1250"
-			:isAdded="false"
-		/>
-
-		<Card
-			title="Мужские Кроссовки Nike Blazer Mid Suede"
-			img="/sneakers/sneakers-12.jpg"
-			:price="1050"
-			:isAdded="false"
+			v-for="item in items"
+			:key="item.id"
+			:title="item.title"
+			:img="item.imageUrl"
+			:price="item.price"
 		/>
 	</div>
 </template>

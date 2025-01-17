@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Header from '../components/Header.vue'
 import CardList from '../components/CardList.vue'
+import { items } from '../items.data'
 </script>
 
 <template>
@@ -36,7 +37,9 @@ import CardList from '../components/CardList.vue'
 				</div>
 			</div>
 
-			<CardList />
+			<div class="mt-10">
+				<CardList :items />
+			</div>
 		</div>
 	</div>
 </template>
