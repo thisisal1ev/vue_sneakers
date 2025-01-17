@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import CartItem from './CartItem.vue'
 </script>
 
@@ -37,7 +37,7 @@ import CartItem from './CartItem.vue'
 			<div class="flex flex-col gap-5">
 				<CartItem
 					title="Мужские Кроссовки Nike Blazer Mid Suede"
-					price="1000"
+					:price="1000"
 					img="/sneakers/sneakers-1.jpg"
 				/>
 			</div>

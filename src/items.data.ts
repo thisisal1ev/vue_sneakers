@@ -1,5 +1,4 @@
-
-export const items = [
+export const ITEMS = [
 	{
 		id: 1,
 		title: 'Мужские Кроссовки Nike Blazer Mid Suede',
@@ -74,4 +73,4 @@ export const items = [
 	},
 ]
 
-export type TItems = (typeof items)[0]
+export type TItems = (typeof ITEMS)[0]

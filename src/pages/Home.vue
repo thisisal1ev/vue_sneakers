@@ -1,7 +1,28 @@
 <script lang="ts" setup>
+import { reactive } from 'vue'
+import type { TItems } from '../items.data'
+
 import Header from '../components/Header.vue'
 import CardList from '../components/CardList.vue'
-import { items } from '../items.data'
+
+interface Props {
+	items: TItems[]
+}
+
+type SortBy = 'title' | 'price' | '-price'
+
+interface FiltersProps {
+	sortBy: SortBy
+	searchQuery: string
+}
+
+const filters = reactive<FiltersProps>({
+	sortBy: 'title',
+	searchQuery: '',
+})
+
+defineProps<Props>()
+defineEmits(['sort', 'search'])
 </script>
 
 <template>
@@ -14,15 +35,19 @@ import { items } from '../items.data'
 
 				<div class="flex items-center gap-4">
 					<select
+						v-model="filters.sortBy"
+						@change="$emit('sort', filters.sortBy)"
 						class="py-2 px-3 border border-gray-200 focus:border-gray-400 rounded-md focus:outline-none"
 					>
-						<option value="name">По названию</option>
+						<option value="title" selected>По названию</option>
+						<option value="-price">По цене (дорогие)</option>
 						<option value="price">По цене (дешевые)</option>
-						<option value="price">По цене (дорогие)</option>
 					</select>
 
 					<div class="relative">
 						<input
+							v-model="filters.searchQuery"
+							@input="$emit('search', filters.searchQuery)"
 							type="search"
 							class="border border-gray-200 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:border-gray-400"
 							placeholder="Поиск..."
