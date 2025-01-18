@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+interface Props {
+	totalPrice: number
+}
+
+defineProps<Props>()
 defineEmits(['openDrawer'])
 </script>
 
@@ -19,7 +24,7 @@ defineEmits(['openDrawer'])
 					class="flex items-center gap-3 cursor-pointer"
 				>
 					<img src="/icons/cart.svg" alt="Cart" />
-					<b>1205 руб.</b>
+					<b>{{ totalPrice }} руб.</b>
 				</button>
 			</li>
 			<li class="flex items-center gap-3 cursor-pointer">

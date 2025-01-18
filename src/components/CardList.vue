@@ -7,7 +7,7 @@ interface Props {
 }
 
 defineProps<Props>()
-defineEmits(['addToFavorites'])
+defineEmits(['addToFavorites', 'addToCart'])
 </script>
 
 <template>
@@ -19,8 +19,9 @@ defineEmits(['addToFavorites'])
 			:img="item.imageUrl"
 			:price="item.price"
 			:isFavorite="item.isFavorite"
+			:isAdded="item.isAdded"
 			@onClickAddToFavorites="$emit('addToFavorites', item)"
-			@onClickAddToCart="console.log(1)"
+			@onClickAddToCart="$emit('addToCart', item)"
 		/>
 	</div>
 </template>

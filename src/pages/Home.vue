@@ -8,6 +8,7 @@ import type { FiltersProps, ItemsProps } from '../@types'
 
 interface Props {
 	items: ItemsProps[]
+	totalPrice: number
 }
 
 const filters = reactive<FiltersProps>({
@@ -43,12 +44,13 @@ const addToFavorites = async (item: ItemsProps) => {
 }
 
 defineProps<Props>()
-defineEmits(['sort', 'search', 'open'])
+defineEmits(['sort', 'search', 'open', 'addToCart'])
 </script>
+02.
 
 <template>
 	<div class="bg-white w-4/5 m-auto rounded-xl shadow-xl shadow-grey-200 mt-20">
-		<Header @openDrawer="$emit('open')" />
+		<Header :totalPrice @openDrawer="$emit('open')" />
 
 		<div class="p-10">
 			<div class="flex justify-between items-center mb-10">
@@ -87,6 +89,7 @@ defineEmits(['sort', 'search', 'open'])
 				<CardList
 					:items
 					@addToFavorites="(item: ItemsProps )=> addToFavorites(item)"
+					@addToCart="(item: ItemsProps )=> $emit('addToCart', item)"
 				/>
 			</div>
 		</div>

@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import type { ItemsProps } from '../@types'
 import CartItem from './CartItem.vue'
 
-defineEmits(['close'])
+defineProps<{ cart: ItemsProps[] }>()
+defineEmits(['close', 'deleteItem'])
 </script>
 
 <template>
@@ -9,6 +11,7 @@ defineEmits(['close'])
 		@click="$emit('close')"
 		class="fixed z-10 top-0 h-full w-full bg-black opacity-70"
 	/>
+
 	<div
 		class="flex flex-col justify-between fixed z-10 top-0 h-full right-0 w-1/4 bg-white px-8 py-5"
 	>
@@ -40,12 +43,16 @@ defineEmits(['close'])
 			</button>
 			Корзина
 		</h2>
+
 		<div class="flex flex-col flex-1 justify-between">
 			<div class="flex flex-col gap-5">
 				<CartItem
-					title="Мужские Кроссовки Nike Blazer Mid Suede"
-					:price="1000"
-					img="/sneakers/sneakers-1.jpg"
+					v-if="cart.length"
+					v-for="item in cart"
+					:title="item.title"
+					:price="item.price"
+					:img="item.imageUrl"
+					@onClickDelete="$emit('deleteItem', item)"
 				/>
 			</div>
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import axios, { AxiosError } from 'axios'
 import type { TItems } from './items.data'
 import type { FavoriteProps, FiltersProps, ItemsProps } from './@types'
@@ -8,14 +8,37 @@ import Home from './pages/Home.vue'
 import Drawer from './components/Drawer.vue'
 
 const items = ref<ItemsProps[]>([])
+const cart = ref<ItemsProps[]>([])
 const isDrawerOpen = ref<boolean>(false)
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
 })
 
+const totalPrice = computed(() =>
+	cart.value.map(item => item.price).reduce((prev, next) => prev + next, 0)
+)
+
 const toggleDrawer = (): void => {
 	isDrawerOpen.value = !isDrawerOpen.value
+}
+
+const addToCart = (item: ItemsProps): void => {
+	cart.value.push(item)
+	item.isAdded = true
+}
+
+const removeFromCart = (item: ItemsProps): void => {
+	cart.value.splice(cart.value.indexOf(item), 1)
+	item.isAdded = false
+}
+
+const addOrRemoveFromCart = (item: ItemsProps): void => {
+	if (!item.isAdded) {
+		addToCart(item)
+	} else {
+		removeFromCart(item)
+	}
 }
 
 const fetchFavorites = async (): Promise<void> => {
@@ -79,9 +102,16 @@ watch(filters, fetchItems)
 <template>
 	<Home
 		:items
-		@sort="(value:string)=> filters.sortBy = value"
-		@search="(value:string)=> filters.searchQuery = value.trim()"
+		:totalPrice
+		@sort="(value:string) => filters.sortBy = value"
+		@search="(value:string )=> filters.searchQuery = value.trim()"
 		@open="toggleDrawer"
+		@addToCart="(item:ItemsProps) => addOrRemoveFromCart(item)"
 	/>
-	<Drawer v-if="isDrawerOpen" @close="toggleDrawer" />
+	<Drawer
+		v-if="isDrawerOpen"
+		:cart
+		@close="toggleDrawer"
+		@deleteItem="(item:ItemsProps) => removeFromCart(item)"
+	/>
 </template>
