@@ -5,12 +5,18 @@ import type { TItems } from './items.data'
 import type { FavoriteProps, FiltersProps, ItemsProps } from './@types'
 
 import Home from './pages/Home.vue'
+import Drawer from './components/Drawer.vue'
 
 const items = ref<ItemsProps[]>([])
+const isDrawerOpen = ref<boolean>(false)
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
 })
+
+const toggleDrawer = (): void => {
+	isDrawerOpen.value = !isDrawerOpen.value
+}
 
 const fetchFavorites = async (): Promise<void> => {
 	try {
@@ -75,5 +81,7 @@ watch(filters, fetchItems)
 		:items
 		@sort="(value:string)=> filters.sortBy = value"
 		@search="(value:string)=> filters.searchQuery = value.trim()"
+		@open="toggleDrawer"
 	/>
+	<Drawer v-if="isDrawerOpen" @close="toggleDrawer" />
 </template>

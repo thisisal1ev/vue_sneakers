@@ -8,14 +8,17 @@ interface Props {
 }
 
 defineProps<Props>()
-defineEmits(['onClickAdd'])
+defineEmits(['onClickAddToFavorites', 'onClickAddToCart'])
 </script>
 
 <template>
 	<div
 		class="relative flex flex-col w-full border border-slate-100 rounded-xl p-8 cursor-pointer transition hover:shadow-xl hover:transform hover:-translate-y-2"
 	>
-		<button @click="$emit('onClickAdd')" class="absolute top-8 left-8">
+		<button
+			@click="$emit('onClickAddToFavorites')"
+			class="absolute top-8 left-8"
+		>
 			<img
 				:src="isFavorite ? '/icons/like-2.svg' : '/icons/like-1.svg'"
 				alt="Favorite"
@@ -38,7 +41,7 @@ defineEmits(['onClickAdd'])
 				<span class="font-bold">{{ price }} руб.</span>
 			</div>
 
-			<button>
+			<button @click="$emit('onClickAddToCart')">
 				<img
 					:src="isAdded ? '/icons/checked.svg' : '/icons/plus.svg'"
 					width="32"

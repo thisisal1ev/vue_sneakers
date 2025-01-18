@@ -19,7 +19,8 @@ defineEmits(['addToFavorites'])
 			:img="item.imageUrl"
 			:price="item.price"
 			:isFavorite="item.isFavorite"
-			@onClickAdd="$emit('addToFavorites', item)"
+			@onClickAddToFavorites="$emit('addToFavorites', item)"
+			@onClickAddToCart="console.log(1)"
 		/>
 	</div>
 </template>

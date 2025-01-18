@@ -2,8 +2,7 @@
 import { reactive } from 'vue'
 import axios from 'axios'
 
-import Header from '../components/Header.vue'
-import CardList from '../components/CardList.vue'
+import { CardList, Header } from '../components'
 
 import type { FiltersProps, ItemsProps } from '../@types'
 
@@ -18,12 +17,11 @@ const filters = reactive<FiltersProps>({
 
 const addToFavorites = async (item: ItemsProps) => {
 	try {
-		item.isFavorite = !item.isFavorite
-
 		if (!item.isFavorite) {
 			const obj = {
 				parentId: item.id,
 			}
+			item.isFavorite = true
 
 			const { data } = await axios.post(
 				`https://401627320f117569.mokky.dev/favorites`,
@@ -32,6 +30,7 @@ const addToFavorites = async (item: ItemsProps) => {
 
 			item.favoriteId = data.id
 		} else {
+			item.isFavorite = false
 			await axios.delete(
 				`https://401627320f117569.mokky.dev/favorites/${item.favoriteId}`
 			)
@@ -44,12 +43,12 @@ const addToFavorites = async (item: ItemsProps) => {
 }
 
 defineProps<Props>()
-defineEmits(['sort', 'search'])
+defineEmits(['sort', 'search', 'open'])
 </script>
 
 <template>
 	<div class="bg-white w-4/5 m-auto rounded-xl shadow-xl shadow-grey-200 mt-20">
-		<Header />
+		<Header @openDrawer="$emit('open')" />
 
 		<div class="p-10">
 			<div class="flex justify-between items-center mb-10">
