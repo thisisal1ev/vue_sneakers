@@ -1,39 +1,38 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-
 interface Props {
 	title: string
 	img: string
 	price: number
 	isAdded?: boolean
+	isFavorite?: boolean
 }
 
 defineProps<Props>()
 defineEmits(['onClickAdd'])
-
-const isLiked = ref<boolean>(false)
-
-const onClick = (): void => {
-	isLiked.value = !isLiked.value
-}
 </script>
 
 <template>
 	<div
 		class="relative flex flex-col w-full border border-slate-100 rounded-xl p-8 cursor-pointer transition hover:shadow-xl hover:transform hover:-translate-y-2"
 	>
-		<div @click="onClick" class="absolute top-8 left-8">
+		<button @click="$emit('onClickAdd')" class="absolute top-8 left-8">
 			<img
-				:src="isLiked ? '/icons/like-2.svg' : '/icons/like-1.svg'"
+				:src="isFavorite ? '/icons/like-2.svg' : '/icons/like-1.svg'"
 				alt="Favorite"
 			/>
-		</div>
+		</button>
 
-		<img width="200" height="200" :src="img" class="w-full" alt="Sneaker" />
+		<img
+			width="220"
+			height="220"
+			:src="img"
+			class="w-full h-56"
+			alt="Sneaker"
+		/>
 
 		<p>{{ title }}</p>
 
-		<div class="flex justify-between mt-5">
+		<div class="flex items-end justify-between grow mt-5">
 			<div class="flex flex-col gap-2">
 				<span class="text-slate-200">Цена:</span>
 				<span class="font-bold">{{ price }} руб.</span>

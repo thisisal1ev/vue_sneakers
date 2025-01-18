@@ -1,25 +1,47 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import type { TItems } from '../items.data'
+import axios from 'axios'
 
 import Header from '../components/Header.vue'
 import CardList from '../components/CardList.vue'
 
+import type { FiltersProps, ItemsProps } from '../@types'
+
 interface Props {
-	items: TItems[]
-}
-
-type SortBy = 'title' | 'price' | '-price'
-
-interface FiltersProps {
-	sortBy: SortBy
-	searchQuery: string
+	items: ItemsProps[]
 }
 
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
 })
+
+const addToFavorites = async (item: ItemsProps) => {
+	try {
+		item.isFavorite = !item.isFavorite
+
+		if (!item.isFavorite) {
+			const obj = {
+				parentId: item.id,
+			}
+
+			const { data } = await axios.post(
+				`https://401627320f117569.mokky.dev/favorites`,
+				obj
+			)
+
+			item.favoriteId = data.id
+		} else {
+			await axios.delete(
+				`https://401627320f117569.mokky.dev/favorites/${item.favoriteId}`
+			)
+
+			item.favoriteId = null
+		}
+	} catch (e) {
+		console.log(e)
+	}
+}
 
 defineProps<Props>()
 defineEmits(['sort', 'search'])
@@ -63,7 +85,10 @@ defineEmits(['sort', 'search'])
 			</div>
 
 			<div class="mt-10">
-				<CardList :items />
+				<CardList
+					:items
+					@addToFavorites="(item: ItemsProps )=> addToFavorites(item)"
+				/>
 			</div>
 		</div>
 	</div>

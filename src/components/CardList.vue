@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import type { TItems } from '../items.data'
+import type { ItemsProps } from '../@types'
 import Card from './Card.vue'
 
 interface Props {
-	items: TItems[]
+	items: ItemsProps[]
 }
 
 defineProps<Props>()
+defineEmits(['addToFavorites'])
 </script>
 
 <template>
@@ -17,6 +18,8 @@ defineProps<Props>()
 			:title="item.title"
 			:img="item.imageUrl"
 			:price="item.price"
+			:isFavorite="item.isFavorite"
+			@onClickAdd="$emit('addToFavorites', item)"
 		/>
 	</div>
 </template>

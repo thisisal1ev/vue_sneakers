@@ -2,21 +2,41 @@
 import { onMounted, reactive, ref, watch } from 'vue'
 import axios, { AxiosError } from 'axios'
 import type { TItems } from './items.data'
+import type { FavoriteProps, FiltersProps, ItemsProps } from './@types'
 
 import Home from './pages/Home.vue'
 
-interface FiltersProps {
-	sortBy: string
-	searchQuery: string
-}
-
-const items = ref<TItems[]>([])
+const items = ref<ItemsProps[]>([])
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
 })
 
-const fetchItems = async () => {
+const fetchFavorites = async (): Promise<void> => {
+	try {
+		const { data: favorites } = await axios.get(
+			`https://401627320f117569.mokky.dev/favorites`
+		)
+
+		items.value = items.value.map((item: ItemsProps) => {
+			const favorite = favorites.find(
+				(favorite: FavoriteProps) => favorite.parentId === item.id
+			)
+
+			if (!favorite) return item
+
+			return {
+				...item,
+				isFavorite: true,
+				favoriteId: favorite.id,
+			}
+		})
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+const fetchItems = async (): Promise<void> => {
 	const params = {
 		sortBy: filters.sortBy,
 		title: `*${filters.searchQuery}*`,
@@ -29,7 +49,13 @@ const fetchItems = async () => {
 				params,
 			}
 		)
-		items.value = data
+
+		items.value = data.map((obj: TItems) => ({
+			...obj,
+			isFavorite: false,
+			isAdded: false,
+			favoriteId: null,
+		}))
 	} catch (e) {
 		if (e instanceof AxiosError) {
 			console.log(e.message)
@@ -37,8 +63,10 @@ const fetchItems = async () => {
 	}
 }
 
-onMounted(fetchItems)
-
+onMounted(async () => {
+	await fetchItems()
+	await fetchFavorites()
+})
 watch(filters, fetchItems)
 </script>
 
