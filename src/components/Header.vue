@@ -24,7 +24,7 @@ defineEmits(['openDrawer'])
 					class="flex items-center gap-3 cursor-pointer"
 				>
 					<img src="/icons/cart.svg" alt="Cart" />
-					<b>{{ totalPrice }} руб.</b>
+					<b>{{ totalPrice }} &#8381;</b>
 				</button>
 			</li>
 			<li class="flex items-center gap-3 cursor-pointer">

@@ -38,7 +38,7 @@ defineEmits(['onClickAddToFavorites', 'onClickAddToCart'])
 		<div class="flex items-end justify-between grow mt-5">
 			<div class="flex flex-col gap-2">
 				<span class="text-slate-200">Цена:</span>
-				<span class="font-bold">{{ price }} руб.</span>
+				<span class="font-bold">{{ price }} &#8381;</span>
 			</div>
 
 			<button @click="$emit('onClickAddToCart')">

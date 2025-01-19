@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import axios, { AxiosError } from 'axios'
+
 import type { TItems } from './items.data'
 import type { FavoriteProps, FiltersProps, ItemsProps } from './@types'
 
@@ -10,6 +11,7 @@ import Drawer from './components/Drawer.vue'
 const items = ref<ItemsProps[]>([])
 const cart = ref<ItemsProps[]>([])
 const isDrawerOpen = ref<boolean>(false)
+const isCreatingOrder = ref<boolean>(false)
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
@@ -17,6 +19,11 @@ const filters = reactive<FiltersProps>({
 
 const totalPrice = computed(() =>
 	cart.value.map(item => item.price).reduce((prev, next) => prev + next, 0)
+)
+const vatPrice = computed(() => Math.round(totalPrice.value * 5) / 100)
+const cartIsEmpty = computed(() => cart.value.length === 0)
+const disabledButton = computed(
+	() => isCreatingOrder.value || cartIsEmpty.value
 )
 
 const toggleDrawer = (): void => {
@@ -38,6 +45,26 @@ const addOrRemoveFromCart = (item: ItemsProps): void => {
 		addToCart(item)
 	} else {
 		removeFromCart(item)
+	}
+}
+
+const createOrder = async (): Promise<void> => {
+	try {
+		isCreatingOrder.value = true
+		const { data } = await axios.post(
+			`https://401627320f117569.mokky.dev/orders`,
+			{
+				items: cart.value,
+				totalPrice: totalPrice.value,
+			}
+		)
+
+		cart.value = []
+		return data
+	} catch (e) {
+		console.log(e)
+	} finally {
+		isCreatingOrder.value = false
 	}
 }
 
@@ -97,6 +124,16 @@ onMounted(async () => {
 	await fetchFavorites()
 })
 watch(filters, fetchItems)
+watch(
+	cart,
+	() => {
+		items.value = items.value.map((item: ItemsProps) => ({
+			...item,
+			isAdded: cart.value.some(cartItem => cartItem.id === item.id),
+		}))
+	},
+	{ deep: true }
+)
 </script>
 
 <template>
@@ -108,10 +145,15 @@ watch(filters, fetchItems)
 		@open="toggleDrawer"
 		@addToCart="(item:ItemsProps) => addOrRemoveFromCart(item)"
 	/>
+
 	<Drawer
 		v-if="isDrawerOpen"
 		:cart
+		:vatPrice
+		:totalPrice
+		:disabledButton
 		@close="toggleDrawer"
 		@deleteItem="(item:ItemsProps) => removeFromCart(item)"
+		@createOrder="createOrder"
 	/>
 </template>

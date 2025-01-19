@@ -2,8 +2,15 @@
 import type { ItemsProps } from '../@types'
 import CartItem from './CartItem.vue'
 
-defineProps<{ cart: ItemsProps[] }>()
-defineEmits(['close', 'deleteItem'])
+interface Props {
+	cart: ItemsProps[]
+	vatPrice: number
+	totalPrice: number
+	disabledButton: boolean
+}
+
+defineProps<Props>()
+defineEmits(['close', 'deleteItem', 'createOrder'])
 </script>
 
 <template>
@@ -61,18 +68,20 @@ defineEmits(['close', 'deleteItem'])
 					<div class="flex items-end gap-2">
 						<span>Итого:</span>
 						<div class="flex-1 border-b border-dashed" />
-						<span class="font-bold">1000 руб.</span>
+						<span class="font-bold">{{ totalPrice + vatPrice }} &#8381;</span>
 					</div>
 
 					<div class="flex items-end gap-2">
 						<span>Налог 5%:</span>
 						<div class="flex-1 border-b border-dashed" />
-						<span class="font-bold">50 руб.</span>
+						<span class="font-bold">{{ vatPrice }} &#8381;</span>
 					</div>
 				</div>
 
 				<button
-					class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600"
+					@click="$emit('createOrder')"
+					:disabled="disabledButton"
+					class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
 				>
 					Оформить заказ
 					<img src="/icons/arrow-next.svg" alt="Arrow" />
