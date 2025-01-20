@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { ItemsProps } from '../@types'
+
 import CartItem from './CartItem.vue'
+import InfoBlock from './InfoBlock.vue'
 
 interface Props {
 	cart: ItemsProps[]
@@ -20,6 +22,7 @@ defineEmits(['close', 'deleteItem', 'createOrder'])
 	/>
 
 	<div
+		v-if="cart.length"
 		class="flex flex-col justify-between fixed z-10 top-0 h-full right-0 w-1/4 bg-white px-8 py-5"
 	>
 		<h2 class="text-2xl font-bold mb-10 flex items-center gap-5">
@@ -88,5 +91,16 @@ defineEmits(['close', 'deleteItem', 'createOrder'])
 				</button>
 			</div>
 		</div>
+	</div>
+
+	<div
+		v-else
+		class="flex flex-col justify-center fixed z-10 top-0 h-full right-0 w-1/4 bg-white px-8 py-5"
+	>
+		<InfoBlock
+			:imageUrl="'/empty-box.png'"
+			:title="'Корзина пуста'"
+			:description="'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'"
+		/>
 	</div>
 </template>

@@ -120,17 +120,22 @@ const fetchItems = async (): Promise<void> => {
 }
 
 onMounted(async () => {
+	const localCart = localStorage.getItem('cart')
+	cart.value = localCart ? JSON.parse(localCart) : []
+
 	await fetchItems()
 	await fetchFavorites()
+
+	items.value = items.value.map((item: ItemsProps) => ({
+		...item,
+		isAdded: cart.value.some(cartItem => cartItem.id === item.id),
+	}))
 })
 watch(filters, fetchItems)
 watch(
 	cart,
 	() => {
-		items.value = items.value.map((item: ItemsProps) => ({
-			...item,
-			isAdded: cart.value.some(cartItem => cartItem.id === item.id),
-		}))
+		localStorage.setItem('cart', JSON.stringify(cart.value))
 	},
 	{ deep: true }
 )
