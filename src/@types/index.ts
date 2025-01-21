@@ -1,7 +1,7 @@
 import type { TItems } from '../items.data'
 
 export interface FiltersProps {
-	sortBy: string
+	sortBy: SortBy
 	searchQuery: string
 }
 
@@ -15,7 +15,7 @@ export interface FavoriteProps extends TItems {
 	parentId: number
 }
 
-type SortBy = 'title' | 'price' | '-price'
+export type SortBy = 'title' | 'price' | '-price'
 
 export interface FiltersInHomeProps {
 	sortBy: SortBy

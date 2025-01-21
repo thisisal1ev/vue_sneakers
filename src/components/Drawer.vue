@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import type { ItemsProps } from '../@types'
-
-import CartItem from './CartItem.vue'
-import InfoBlock from './InfoBlock.vue'
+import { CartItem, InfoBlock } from './'
 
 interface Props {
 	cart: ItemsProps[]

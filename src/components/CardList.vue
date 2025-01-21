@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ItemsProps } from '../@types'
-import Card from './Card.vue'
+import { Card } from './'
 
 interface Props {
 	items: ItemsProps[]

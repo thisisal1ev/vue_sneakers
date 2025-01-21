@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
 import axios, { AxiosError } from 'axios'
+import { RouterView } from 'vue-router'
 
 import type { TItems } from './items.data'
-import type { FavoriteProps, FiltersProps, ItemsProps } from './@types'
+import type { FavoriteProps, FiltersProps, ItemsProps, SortBy } from './@types'
 
-import Home from './pages/Home.vue'
 import Drawer from './components/Drawer.vue'
+import { Header } from './components'
 
 const items = ref<ItemsProps[]>([])
 const cart = ref<ItemsProps[]>([])
@@ -119,6 +120,16 @@ const fetchItems = async (): Promise<void> => {
 	}
 }
 
+const sort = (value: SortBy): void => {
+	filters.sortBy = value
+}
+
+const search = (value: string): void => {
+	filters.searchQuery = value.trim()
+}
+
+provide('cart', { items, addOrRemoveFromCart, sort, search })
+
 onMounted(async () => {
 	const localCart = localStorage.getItem('cart')
 	cart.value = localCart ? JSON.parse(localCart) : []
@@ -142,15 +153,6 @@ watch(
 </script>
 
 <template>
-	<Home
-		:items
-		:totalPrice
-		@sort="(value:string) => filters.sortBy = value"
-		@search="(value:string )=> filters.searchQuery = value.trim()"
-		@open="toggleDrawer"
-		@addToCart="(item:ItemsProps) => addOrRemoveFromCart(item)"
-	/>
-
 	<Drawer
 		v-if="isDrawerOpen"
 		:cart
@@ -161,4 +163,12 @@ watch(
 		@deleteItem="(item:ItemsProps) => removeFromCart(item)"
 		@createOrder="createOrder"
 	/>
+
+	<div class="bg-white w-4/5 m-auto rounded-xl shadow-xl mt-14">
+		<Header :totalPrice @openDrawer="toggleDrawer" />
+
+		<div class="p-10">
+			<RouterView />
+		</div>
+	</div>
 </template>
