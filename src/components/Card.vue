@@ -5,6 +5,7 @@ interface Props {
 	price: number
 	isAdded?: boolean
 	isFavorite?: boolean
+	isFavoritePage?: boolean
 }
 
 defineProps<Props>()
@@ -16,6 +17,7 @@ defineEmits(['onClickAddToFavorites', 'onClickAddToCart'])
 		class="relative flex flex-col w-full border border-slate-100 rounded-xl p-8 cursor-pointer transition hover:shadow-xl hover:transform hover:-translate-y-2"
 	>
 		<button
+			v-if="!isFavoritePage"
 			@click="$emit('onClickAddToFavorites')"
 			class="absolute top-8 left-8"
 		>
@@ -41,7 +43,7 @@ defineEmits(['onClickAddToFavorites', 'onClickAddToCart'])
 				<span class="font-bold">{{ price }} &#8381;</span>
 			</div>
 
-			<button @click="$emit('onClickAddToCart')">
+			<button v-if="!isFavoritePage" @click="$emit('onClickAddToCart')">
 				<img
 					:src="isAdded ? '/icons/checked.svg' : '/icons/plus.svg'"
 					width="32"

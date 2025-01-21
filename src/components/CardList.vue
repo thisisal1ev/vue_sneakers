@@ -4,6 +4,7 @@ import { Card } from './'
 
 interface Props {
 	items: ItemsProps[]
+	isFavoritePage?: boolean
 }
 
 defineProps<Props>()
@@ -20,6 +21,7 @@ defineEmits(['addToFavorites', 'addToCart'])
 			:price="item.price"
 			:isFavorite="item.isFavorite"
 			:isAdded="item.isAdded"
+			:isFavoritePage="isFavoritePage || false"
 			@onClickAddToFavorites="$emit('addToFavorites', item)"
 			@onClickAddToCart="$emit('addToCart', item)"
 		/>

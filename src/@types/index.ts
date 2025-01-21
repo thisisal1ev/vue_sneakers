@@ -12,7 +12,7 @@ export interface ItemsProps extends TItems {
 }
 
 export interface FavoriteProps extends TItems {
-	parentId: number
+	itemId: number
 }
 
 export type SortBy = 'title' | 'price' | '-price'
@@ -20,4 +20,10 @@ export type SortBy = 'title' | 'price' | '-price'
 export interface FiltersInHomeProps {
 	sortBy: SortBy
 	searchQuery: string
+}
+
+export interface FavoritesProps {
+	itemId: number
+	item: TItems
+	id: number
 }

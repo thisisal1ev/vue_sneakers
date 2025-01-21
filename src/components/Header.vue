@@ -18,7 +18,7 @@ defineEmits(['openDrawer'])
 		</RouterLink>
 
 		<ul class="flex items-center gap-10">
-			<li class="flex items-center gap-3 cursor-pointer">
+			<li>
 				<button
 					@click="$emit('openDrawer')"
 					class="flex items-center gap-3 cursor-pointer"
@@ -27,9 +27,14 @@ defineEmits(['openDrawer'])
 					<b>{{ totalPrice }} &#8381;</b>
 				</button>
 			</li>
-			<li class="flex items-center gap-3 cursor-pointer">
-				<img src="/icons/heart.svg" alt="Favorite" />
-				<span>Закладки</span>
+			<li>
+				<RouterLink
+					to="/favorites"
+					class="flex items-center gap-3 cursor-pointer"
+				>
+					<img src="/icons/heart.svg" alt="Favorite" />
+					<span>Закладки</span>
+				</RouterLink>
 			</li>
 			<li class="flex items-center gap-3 cursor-pointer">
 				<img src="/icons/profile.svg" alt="Favorite" />

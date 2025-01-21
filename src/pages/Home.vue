@@ -14,8 +14,10 @@ const addToFavorites = async (item: ItemsProps) => {
 	try {
 		if (!item.isFavorite) {
 			const obj = {
-				parentId: item.id,
+				itemId: item.id,
+				item,
 			}
+
 			item.isFavorite = true
 
 			const { data } = await axios.post(
@@ -47,7 +49,7 @@ const {
 	addOrRemoveFromCart: (item: ItemsProps) => void
 	sort: (sortBy: string) => void
 	search: (searchQuery: string) => void
-} = inject('cart', {
+} = inject('items', {
 	items: [],
 	addOrRemoveFromCart: (value: ItemsProps) => console.log(value),
 	sort: (value: string) => console.log(value),

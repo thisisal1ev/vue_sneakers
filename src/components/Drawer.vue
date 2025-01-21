@@ -1,16 +1,52 @@
 <script lang="ts" setup>
+import axios from 'axios'
+import { computed, inject, ref, type Ref } from 'vue'
+
 import type { ItemsProps } from '../@types'
 import { CartItem, InfoBlock } from './'
 
-interface Props {
-	cart: ItemsProps[]
-	vatPrice: number
-	totalPrice: number
-	disabledButton: boolean
-}
+defineEmits(['close', 'deleteItem'])
+let {
+	cart,
+	totalPrice,
+	vatPrice,
+}: {
+	cart: Ref<ItemsProps[]>
+	totalPrice: Ref<number>
+	vatPrice: Ref<number>
+} = inject('cart', {
+	cart: ref([]),
+	totalPrice: ref(0),
+	vatPrice: ref(0),
+})
 
-defineProps<Props>()
-defineEmits(['close', 'deleteItem', 'createOrder'])
+const isCreatingOrder = ref<boolean>(false)
+const orderId = ref<number | null>(null)
+const cartIsEmpty = computed(() => cart.value.length === 0)
+const disabledButton = computed(
+	() => isCreatingOrder.value || cartIsEmpty.value
+)
+
+const createOrder = async (): Promise<void> => {
+	try {
+		isCreatingOrder.value = true
+		const { data } = await axios.post(
+			`https://401627320f117569.mokky.dev/orders`,
+			{
+				items: cart.value,
+				totalPrice: totalPrice.value,
+			}
+		)
+
+		cart.value = []
+		orderId.value = data.id
+		return data
+	} catch (e) {
+		console.log(e)
+	} finally {
+		isCreatingOrder.value = false
+	}
+}
 </script>
 
 <template>
@@ -80,7 +116,7 @@ defineEmits(['close', 'deleteItem', 'createOrder'])
 				</div>
 
 				<button
-					@click="$emit('createOrder')"
+					@click="() => createOrder()"
 					:disabled="disabledButton"
 					class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
 				>
@@ -96,9 +132,25 @@ defineEmits(['close', 'deleteItem', 'createOrder'])
 		class="flex flex-col justify-center fixed z-10 top-0 h-full right-0 w-1/4 bg-white px-8 py-5"
 	>
 		<InfoBlock
+			v-if="!totalPrice && orderId"
+			:imageUrl="'/success.png'"
+			:title="'Заказ оформлен'"
+			:description="`Ваш заказ #${orderId} скоро будет передан курьерской доставке`"
+		/>
+
+		<InfoBlock
+			v-else
 			:imageUrl="'/empty-box.png'"
 			:title="'Корзина пуста'"
 			:description="'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'"
 		/>
+
+		<button
+			@click="$emit('close')"
+			class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600"
+		>
+			<img src="/icons/arrow-left.svg" alt="Arrow" />
+			Вернуться назад
+		</button>
 	</div>
 </template>
