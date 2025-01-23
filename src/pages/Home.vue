@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { inject, reactive } from 'vue'
-import axios from 'axios'
 
-import { CardList } from '../components'
 import type { FiltersProps, ItemsProps } from '../@types'
+import { CardList } from '../components'
+import { axiosInstance } from '../services/instance'
+import { useItemsStore } from '../stores/useItemsStore'
 
+const itemsStore = useItemsStore()
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
@@ -20,17 +22,12 @@ const addToFavorites = async (item: ItemsProps) => {
 
 			item.isFavorite = true
 
-			const { data } = await axios.post(
-				`https://401627320f117569.mokky.dev/favorites`,
-				obj
-			)
+			const { data } = await axiosInstance.post(`/favorites`, obj)
 
 			item.favoriteId = data.id
 		} else {
 			item.isFavorite = false
-			await axios.delete(
-				`https://401627320f117569.mokky.dev/favorites/${item.favoriteId}`
-			)
+			await axiosInstance.delete(`/favorites/${item.favoriteId}`)
 
 			item.favoriteId = null
 		}
@@ -40,17 +37,14 @@ const addToFavorites = async (item: ItemsProps) => {
 }
 
 const {
-	items,
 	addOrRemoveFromCart,
 	sort,
 	search,
 }: {
-	items: ItemsProps[]
 	addOrRemoveFromCart: (item: ItemsProps) => void
 	sort: (sortBy: string) => void
 	search: (searchQuery: string) => void
 } = inject('items', {
-	items: [],
 	addOrRemoveFromCart: (value: ItemsProps) => console.log(value),
 	sort: (value: string) => console.log(value),
 	search: (value: string) => console.log(value),
@@ -92,7 +86,7 @@ const {
 
 	<div class="mt-10">
 		<CardList
-			:items
+			:items="itemsStore.items"
 			@addToFavorites="(item: ItemsProps )=> addToFavorites(item)"
 			@addToCart="(item: ItemsProps )=> addOrRemoveFromCart(item)"
 		/>

@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
-import axios, { AxiosError } from 'axios'
 import { RouterView } from 'vue-router'
 
-import type { TItems } from './items.data'
-import type { FavoriteProps, FiltersProps, ItemsProps, SortBy } from './@types'
+import type { FiltersProps, ItemsProps, SortBy } from './@types'
+import { useItemsStore } from './stores/useItemsStore'
 
-import Drawer from './components/Drawer.vue'
 import { Header } from './components'
+import Drawer from './components/Drawer.vue'
 
-const items = ref<ItemsProps[]>([])
+const itemsStore = useItemsStore()
 const cart = ref<ItemsProps[]>([])
 const isDrawerOpen = ref<boolean>(false)
 const filters = reactive<FiltersProps>({
@@ -44,57 +43,6 @@ const addOrRemoveFromCart = (item: ItemsProps): void => {
 	}
 }
 
-const fetchFavorites = async (): Promise<void> => {
-	try {
-		const { data: favorites } = await axios.get(
-			`https://401627320f117569.mokky.dev/favorites`
-		)
-
-		items.value = items.value.map((item: ItemsProps) => {
-			const favorite = favorites.find(
-				(favorite: FavoriteProps) => favorite.itemId === item.id
-			)
-
-			if (!favorite) return item
-
-			return {
-				...item,
-				isFavorite: true,
-				favoriteId: favorite.id,
-			}
-		})
-	} catch (e) {
-		console.log(e)
-	}
-}
-
-const fetchItems = async (): Promise<void> => {
-	const params = {
-		sortBy: filters.sortBy,
-		title: `*${filters.searchQuery}*`,
-	}
-
-	try {
-		const { data } = await axios.get(
-			`https://401627320f117569.mokky.dev/items`,
-			{
-				params,
-			}
-		)
-
-		items.value = data.map((obj: TItems) => ({
-			...obj,
-			isFavorite: false,
-			isAdded: false,
-			favoriteId: null,
-		}))
-	} catch (e) {
-		if (e instanceof AxiosError) {
-			console.log(e.message)
-		}
-	}
-}
-
 const sort = (value: SortBy): void => {
 	filters.sortBy = value
 }
@@ -103,22 +51,22 @@ const search = (value: string): void => {
 	filters.searchQuery = value.trim()
 }
 
-provide('items', { items, addOrRemoveFromCart, sort, search })
+provide('items', { addOrRemoveFromCart, sort, search })
 provide('cart', { cart, totalPrice, vatPrice })
 
 onMounted(async () => {
 	const localCart = localStorage.getItem('cart')
 	cart.value = localCart ? JSON.parse(localCart) : []
 
-	await fetchItems()
-	await fetchFavorites()
+	await itemsStore.fetchItems(filters)
+	await itemsStore.fetchFavorites()
 
-	items.value = items.value.map((item: ItemsProps) => ({
+	itemsStore.items = itemsStore.items.map((item: ItemsProps) => ({
 		...item,
 		isAdded: cart.value.some(cartItem => cartItem.id === item.id),
 	}))
 })
-watch(filters, fetchItems)
+watch(filters, itemsStore.fetchItems)
 watch(
 	cart,
 	() => {
