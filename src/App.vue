@@ -2,10 +2,10 @@
 import { onMounted, provide, reactive, ref, watch } from 'vue'
 import { RouterView } from 'vue-router'
 
+import type { FiltersProps, ItemsProps, SortBy } from './@types'
 import { Header } from './components'
 import Drawer from './components/Drawer.vue'
 import { useCartStore, useItemsStore } from './stores'
-import type { FiltersProps, ItemsProps, SortBy } from './@types'
 
 const cartStore = useCartStore()
 const itemsStore = useItemsStore()

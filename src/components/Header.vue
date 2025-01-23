@@ -13,6 +13,7 @@ defineEmits(['openDrawer'])
 			<img src="/logo.png" alt="Logo" class="w-11" />
 			<div>
 				<h2 class="font-bold text-xl uppercase">Vue Sneakers</h2>
+
 				<p class="text-slate-400">Магазин лучших кроссовок</p>
 			</div>
 		</RouterLink>
@@ -24,20 +25,25 @@ defineEmits(['openDrawer'])
 					class="flex items-center gap-3 cursor-pointer"
 				>
 					<img src="/icons/cart.svg" alt="Cart" />
+
 					<b>{{ totalPrice }} &#8381;</b>
 				</button>
 			</li>
+
 			<li>
 				<RouterLink
 					to="/favorites"
 					class="flex items-center gap-3 cursor-pointer"
 				>
 					<img src="/icons/heart.svg" alt="Favorite" />
+
 					<span>Закладки</span>
 				</RouterLink>
 			</li>
+
 			<li class="flex items-center gap-3 cursor-pointer">
 				<img src="/icons/profile.svg" alt="Favorite" />
+
 				<span>Профиль</span>
 			</li>
 		</ul>

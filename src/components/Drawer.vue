@@ -1,41 +1,17 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
-import { useCartStore, useItemsStore } from '../stores'
+import { useCartStore, useItemsStore, useOrderStore } from '../stores'
 import { CartItem, InfoBlock } from './'
-import { axiosInstance } from '../services/instance'
 
 defineEmits(['close', 'deleteItem'])
 
 const cartStore = useCartStore()
 const itemsStore = useItemsStore()
-const isCreatingOrder = ref<boolean>(false)
-const orderId = ref<number | null>(null)
+const orderStore = useOrderStore()
 const disabledButton = computed(
-	() => isCreatingOrder.value || cartStore.cartIsEmpty
+	() => orderStore.isCreatingOrder || cartStore.cartIsEmpty
 )
-
-const createOrder = async (): Promise<void> => {
-	try {
-		isCreatingOrder.value = true
-		const { data } = await axiosInstance.post(`/orders`, {
-			items: cartStore.cart,
-			totalPrice: cartStore.totalPrice,
-		})
-
-		cartStore.cart = []
-		itemsStore.items = itemsStore.items.map(item => ({
-			...item,
-			isAdded: false,
-		}))
-		orderId.value = data.id
-		return data
-	} catch (e) {
-		console.log(e)
-	} finally {
-		isCreatingOrder.value = false
-	}
-}
 </script>
 
 <template>
@@ -99,8 +75,8 @@ const createOrder = async (): Promise<void> => {
 						<div class="flex-1 border-b border-dashed" />
 
 						<span class="font-bold"
-							>{{ cartStore.totalPrice + cartStore.vatPrice }} &#8381;</span
-						>
+							>{{ cartStore.totalPrice + cartStore.vatPrice }} &#8381;
+						</span>
 					</div>
 
 					<div class="flex items-end gap-2">
@@ -113,7 +89,13 @@ const createOrder = async (): Promise<void> => {
 				</div>
 
 				<button
-					@click="() => createOrder()"
+					@click="
+						() =>
+							orderStore.createOrder({
+								cartStore,
+								itemsStore,
+							})
+					"
 					:disabled="disabledButton"
 					class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
 				>
@@ -130,10 +112,10 @@ const createOrder = async (): Promise<void> => {
 		class="flex flex-col justify-center fixed z-10 top-0 h-full right-0 w-1/4 bg-white px-8 py-5"
 	>
 		<InfoBlock
-			v-if="!cartStore.totalPrice && orderId"
+			v-if="!cartStore.totalPrice && orderStore.orderId"
 			:imageUrl="'/success.png'"
 			:title="'Заказ оформлен'"
-			:description="`Ваш заказ #${orderId} скоро будет передан курьерской доставке`"
+			:description="`Ваш заказ #${orderStore.orderId} скоро будет передан курьерской доставке`"
 		/>
 
 		<InfoBlock

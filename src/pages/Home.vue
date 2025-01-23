@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { inject, reactive } from 'vue'
 
-import { CardList } from '../components'
-import { axiosInstance } from '../services/instance'
-import { useItemsStore, useCartStore } from '../stores'
 import type { FiltersProps, ItemsProps } from '../@types'
+import { CardList } from '../components'
+import { addToFavorites } from '../services/favorites'
+import { useCartStore, useItemsStore } from '../stores'
 
 const itemsStore = useItemsStore()
 const cartStore = useCartStore()
@@ -12,30 +12,6 @@ const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
 })
-
-const addToFavorites = async (item: ItemsProps) => {
-	try {
-		if (!item.isFavorite) {
-			const obj = {
-				itemId: item.id,
-				item,
-			}
-
-			item.isFavorite = true
-
-			const { data } = await axiosInstance.post(`/favorites`, obj)
-
-			item.favoriteId = data.id
-		} else {
-			item.isFavorite = false
-			await axiosInstance.delete(`/favorites/${item.favoriteId}`)
-
-			item.favoriteId = null
-		}
-	} catch (e) {
-		console.log(e)
-	}
-}
 
 const {
 	sort,

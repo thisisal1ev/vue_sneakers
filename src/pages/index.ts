@@ -1,4 +1,4 @@
-import Home from './Home.vue'
 import Favorites from './Favorites.vue'
+import Home from './Home.vue'
 
-export { Home, Favorites }
+export { Favorites, Home }

@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { getFavorites, getItems } from '../services/items'
 import type { FiltersProps, ItemsProps } from '../@types'
+import { getFavorites, getItems } from '../services/items'
 
 export const useItemsStore = defineStore('items', () => {
 	const items = ref<ItemsProps[]>([])
 
-	async function fetchItems(props: FiltersProps) {
+	async function fetchItems(props: FiltersProps): Promise<void> {
 		try {
 			const data = await getItems(props)
 			items.value = data.value
@@ -16,7 +16,7 @@ export const useItemsStore = defineStore('items', () => {
 		}
 	}
 
-	async function fetchFavorites() {
+	async function fetchFavorites(): Promise<void> {
 		try {
 			const data = await getFavorites()
 			items.value = data.value

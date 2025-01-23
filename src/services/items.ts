@@ -19,6 +19,7 @@ export async function getItems(props: FiltersProps): Promise<Ref<ItemsProps[]>> 
 
 		items.value = data.map((obj: TItems) => ({
 			...obj,
+			isFavorite: false,
 			isAdded: false,
 			favoriteId: null,
 		}))

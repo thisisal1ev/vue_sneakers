@@ -27,3 +27,13 @@ export interface FavoritesProps {
 	item: TItems
 	id: number
 }
+
+export interface IOrderProps {
+	cartStore: {
+		cart: ItemsProps[]
+		totalPrice: number
+	}
+	itemsStore: {
+		items: ItemsProps[]
+	}
+}
