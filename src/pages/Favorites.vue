@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 
 import { CardList } from '../components'
-import { useFavoritesStore } from '../stores/useFavoritesStore'
+import { useFavoritesStore } from '../stores'
 
 const favoritesStore = useFavoritesStore()
 

@@ -1,8 +1,8 @@
 import { ref, type Ref } from 'vue'
 
-import { axiosInstance } from './instance'
-import type { TItems } from '../items.data'
 import type { FavoriteProps, FiltersProps, ItemsProps } from '../@types'
+import type { TItems } from '../items.data'
+import { axiosInstance } from './instance'
 
 const items = ref<ItemsProps[]>([])
 
@@ -19,7 +19,6 @@ export async function getItems(props: FiltersProps): Promise<Ref<ItemsProps[]>> 
 
 		items.value = data.map((obj: TItems) => ({
 			...obj,
-			isFavorite: false,
 			isAdded: false,
 			favoriteId: null,
 		}))

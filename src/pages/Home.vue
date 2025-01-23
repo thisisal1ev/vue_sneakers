@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { inject, reactive } from 'vue'
 
-import type { FiltersProps, ItemsProps } from '../@types'
 import { CardList } from '../components'
 import { axiosInstance } from '../services/instance'
-import { useItemsStore } from '../stores/useItemsStore'
+import { useItemsStore, useCartStore } from '../stores'
+import type { FiltersProps, ItemsProps } from '../@types'
 
 const itemsStore = useItemsStore()
+const cartStore = useCartStore()
 const filters = reactive<FiltersProps>({
 	sortBy: 'title',
 	searchQuery: '',
@@ -37,15 +38,12 @@ const addToFavorites = async (item: ItemsProps) => {
 }
 
 const {
-	addOrRemoveFromCart,
 	sort,
 	search,
 }: {
-	addOrRemoveFromCart: (item: ItemsProps) => void
 	sort: (sortBy: string) => void
 	search: (searchQuery: string) => void
 } = inject('items', {
-	addOrRemoveFromCart: (value: ItemsProps) => console.log(value),
 	sort: (value: string) => console.log(value),
 	search: (value: string) => console.log(value),
 })
@@ -88,7 +86,7 @@ const {
 		<CardList
 			:items="itemsStore.items"
 			@addToFavorites="(item: ItemsProps )=> addToFavorites(item)"
-			@addToCart="(item: ItemsProps )=> addOrRemoveFromCart(item)"
+			@addToCart="(item: ItemsProps )=> cartStore.addOrRemoveFromCart(item)"
 		/>
 	</div>
 </template>
