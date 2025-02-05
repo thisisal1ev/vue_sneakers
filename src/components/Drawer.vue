@@ -55,55 +55,53 @@ const disabledButton = computed(
 			Корзина
 		</h2>
 
-		<div class="flex flex-col flex-1 justify-between">
+		<div class="overflow-auto flex-1 grow space-y-3 my-5">
+			<CartItem
+				v-if="!cartStore.cartIsEmpty"
+				v-for="item in cartStore.cart"
+				:title="item.title"
+				:price="item.price"
+				:img="item.imageUrl"
+				@onClickDelete="$emit('deleteItem', item)"
+			/>
+		</div>
+
+		<div>
 			<div class="flex flex-col gap-5">
-				<CartItem
-					v-if="!cartStore.cartIsEmpty"
-					v-for="item in cartStore.cart"
-					:title="item.title"
-					:price="item.price"
-					:img="item.imageUrl"
-					@onClickDelete="$emit('deleteItem', item)"
-				/>
-			</div>
+				<div class="flex items-end gap-2">
+					<span>Итого:</span>
 
-			<div>
-				<div class="flex flex-col gap-5">
-					<div class="flex items-end gap-2">
-						<span>Итого:</span>
+					<div class="flex-1 border-b border-dashed" />
 
-						<div class="flex-1 border-b border-dashed" />
-
-						<span class="font-bold"
-							>{{ cartStore.totalPrice + cartStore.vatPrice }} &#8381;
-						</span>
-					</div>
-
-					<div class="flex items-end gap-2">
-						<span>Налог 5%:</span>
-
-						<div class="flex-1 border-b border-dashed" />
-
-						<span class="font-bold">{{ cartStore.vatPrice }} &#8381;</span>
-					</div>
+					<span class="font-bold"
+						>{{ cartStore.totalPrice + cartStore.vatPrice }} &#8381;
+					</span>
 				</div>
 
-				<button
-					@click="
-						() =>
-							orderStore.createOrder({
-								cartStore,
-								itemsStore,
-							})
-					"
-					:disabled="disabledButton"
-					class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-				>
-					Оформить заказ
+				<div class="flex items-end gap-2">
+					<span>Налог 5%:</span>
 
-					<img src="/icons/arrow-next.svg" alt="Arrow" />
-				</button>
+					<div class="flex-1 border-b border-dashed" />
+
+					<span class="font-bold">{{ cartStore.vatPrice }} &#8381;</span>
+				</div>
 			</div>
+
+			<button
+				@click="
+					() =>
+						orderStore.createOrder({
+							cartStore,
+							itemsStore,
+						})
+				"
+				:disabled="disabledButton"
+				class="flex justify-center items-center gap-3 w-full py-3 mt-10 bg-lime-500 text-white rounded-xl transition active:bg-lime-700 hover:bg-lime-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+			>
+				Оформить заказ
+
+				<img src="/icons/arrow-next.svg" alt="Arrow" />
+			</button>
 		</div>
 	</div>
 
