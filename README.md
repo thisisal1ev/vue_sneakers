@@ -1,5 +1,28 @@
-# Vue 3 + TypeScript + Vite
+# Vue sneakers
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+---
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+<img src='./public/demo.png' alt='demo'/>
+
+## 🛠 Stack
+
+- Vue3
+- vue-router
+- Tailwind4
+- Pinia
+- Axios
+- @formkit/auto-animate
+
+## ✨ Main Functions
+
+- **🛒 Shopping Cart**
+- **👟 Sneakers Catalog**
+
+## 🤝 Contributing
+
+Please report bugs in the [Issues](https://github.com/thisisal1ev/vue_sneakers/issues) section or submit a Pull Request with your suggestions.
+
+## Connection
+
+<a href='mailto:aaalievvv1@gmail.com'>Email</a>
+<a href='https://t.me/thisisal1ev'>Telegram</a>

@@ -33,7 +33,7 @@ const {
 			<select
 				v-model="filters.sortBy"
 				@change="sort(filters.sortBy)"
-				class="py-2 px-3 border border-gray-200 focus:border-gray-400 rounded-md focus:outline-none"
+				class="py-2 px-3 border border-gray-200 focus:border-gray-400 rounded-md focus:outline-hidden"
 			>
 				<option value="title" selected>По названию</option>
 				<option value="-price">По цене (дорогие)</option>
@@ -45,7 +45,7 @@ const {
 					v-model="filters.searchQuery"
 					@input="search(filters.searchQuery)"
 					type="search"
-					class="border border-gray-200 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:border-gray-400"
+					class="border border-gray-200 rounded-md py-2 pl-10 pr-4 focus:outline-hidden focus:border-gray-400"
 					placeholder="Поиск..."
 				/>
 
